@@ -8,10 +8,10 @@ WRITE_API_URL = "bear://x-callback-url/add-text"
 OPEN_NOTE_API_URL = "bear://x-callback-url/open-note"
 
 # You can change that (markdown rendering of links)
-BACKREFERENCES_SECTION = '\n\n' + '-' * 10 + '\n'
+BACKREFERENCES_SECTION = '\n\n' + '-' * 3 + '\n'
 DEFAULT_BACKREFERENCES_INTRO_TEXT = "This note is referenced in:\n"
 BACKREFERENCES_INTRO_TEXT = DEFAULT_BACKREFERENCES_INTRO_TEXT
-BACKREFERENCE_PREFIX = '* '
+BACKREFERENCE_PREFIX = '\t*'
 
 ROOT_SECTION_TEXT = "/"
 ROOT_SECTION_TEXT = os.getenv('BEAR_ROOT_SECTION_TEXT', ROOT_SECTION_TEXT)
