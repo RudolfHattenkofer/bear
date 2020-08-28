@@ -9,21 +9,39 @@ from bear_note import BearNote
 from constants import USE_HEADER_LINKS, BACKREFMARKER, BACKREFERENCES_INTRO_TEXT, BACKREFERENCES_SECTION, BACKREFERENCE_PREFIX
 from links import Link, HeaderLink
 from ordered_set import OrderedSet
+import regex as re
 
 
 def main():
     bear_notes = [BearNote(note) for note in bear_api.notes()]
     notes = {note.title: note for note in bear_notes}
+
+    for title, note in notes.items():
+        notes[title].text = replace_links(note.text)
+
     backreferences, _ = find_all_links(notes)
+
+    print("Orphaned notes:\n")
     for note_id, note in notes.items():
         if "#_index" in note.text:
             continue
 
         note_back_refs = backreferences[note_id]
+        note_text = note.text
         if note_back_refs:
-            new_note_content = ''.join(text_lines(note, backref_links=note_back_refs))
-            bear_api.replace_note_text(note, new_note_content)
+            note_text = ''.join(text_lines(note, backref_links=note_back_refs))
+        elif not '#_daily' in note.text:
+            if note_id != '':
+                print("[[" + note_id + "]]")
+            else:
+                print("[No title](bear://x-callback-url/open-note?id=" + note.uid + ")")
 
+        bear_api.replace_note_text(note, note_text)
+
+
+re_link = re.compile('\[([^\]]+)\]\(bear:\/\/[a-zA-Z\-0-9\/?=]+\)')
+def replace_links(note):
+    return re.sub(re_link, '[[\\1]]', note)
 
 
 def markdown_link_list(links, add_intro=True):
@@ -107,7 +125,8 @@ if __name__ == "__main__":
     valid = True
     for n in bear_notes:
         if n.title in titles:
-            print("DUPLICATED!!!", n.title)
+            print("Duplicated!", n.title)
+            print("[Fix me](bear://x-callback-url/open-note?id=" + n.uid + ")")
             valid = False
 
         titles.append(n.title)

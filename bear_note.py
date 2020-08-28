@@ -5,6 +5,7 @@ import bear_api
 class BearNote:
     def __init__(self, sql_row):
         self.content = sql_row
+        self.text = self.content['ZTEXT'].rstrip()
 
     def append_text(self, text):
         return bear_api.append_text_to_note(self, text)
@@ -41,10 +42,6 @@ class BearNote:
     @property
     def title(self):
         return self.content['ZTITLE']
-
-    @property
-    def text(self):
-        return self.content['ZTEXT'].rstrip()
 
     # Unused for now
     @property

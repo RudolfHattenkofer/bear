@@ -37,6 +37,9 @@ def append_text_to_note(note, text):
 
 
 def replace_note_text(note, text):
+    if note.text == text:
+        return
+
     x_call_text = f"{WRITE_API_URL}?{REPLACE_OPTIONS}&text={encode(text)}&id={note.uid}"
     if TEST:
         print("")
